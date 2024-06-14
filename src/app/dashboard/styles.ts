@@ -11,6 +11,42 @@ export const Container = styled.div`
   background-color: #0f172a;
   color: #f1f5f9;
 `
+
+export const Header = styled.header`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`
+
+export const RedirectButton = styled.button`
+  height: 2.25rem;
+  width: 6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+  border-radius: 0.375rem; /* md */
+  border-style: none;
+  font-size: 0.875rem; /* text-sm */
+  font-weight: 500; /* medium */
+  transition: color 0.3s;
+  cursor: pointer;
+  background-color: #cbd5e1;
+  color: #0f172a;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+`
+
 export const MainContainer = styled.main`
   display: flex;
   flex-direction: column;

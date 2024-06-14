@@ -1,6 +1,7 @@
 'use client'
 
 import { Pencil, Trash } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { Title } from '../home/styles'
@@ -11,9 +12,11 @@ import {
   CustomerNameSpan,
   DeleteSaleButton,
   EditSaleButton,
+  Header,
   IdSpan,
   MainContainer,
   ProductSpan,
+  RedirectButton,
   SaleCard,
   SaleInfo,
   SalePriceSpan,
@@ -31,6 +34,8 @@ export default function Dashboard() {
   const [sales, setSales] = useState<SalesProps[]>([])
   const [isListUpdated, setIsListUpdated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+
+  const router = useRouter()
 
   async function getSales() {
     await fetch('http://localhost:3000/api/sales')
@@ -55,13 +60,20 @@ export default function Dashboard() {
       })
   }
 
+  function handleRedirect() {
+    router.push('/home')
+  }
+
   useEffect(() => {
     getSales()
   }, [isListUpdated])
 
   return (
     <Container>
-      <Title>Dashboard</Title>
+      <Header>
+        <Title>Dashboard</Title>
+        <RedirectButton onClick={handleRedirect}>Home</RedirectButton>
+      </Header>
 
       <MainContainer>
         <SalesForm

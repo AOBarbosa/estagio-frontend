@@ -15,6 +15,29 @@ const saleSchema = z.object({
   price: z.number(),
 })
 
+export async function PATCH(req: NextRequest) {
+  const id = parseInt(req.nextUrl.searchParams.get('id') || '')
+
+  const sale = await req.json()
+
+  // eslint-disable-next-line camelcase
+  const { customer_name, product, price } = saleSchema.parse(sale)
+
+  await prisma.sale.update({
+    where: {
+      id,
+    },
+    data: {
+      // eslint-disable-next-line camelcase
+      customer_name,
+      product,
+      price,
+    },
+  })
+
+  return NextResponse.json({ success: 'Sale updated' }, { status: 204 })
+}
+
 export async function POST(req: NextRequest) {
   const sale = await req.json()
 
