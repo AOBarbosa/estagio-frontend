@@ -1,6 +1,7 @@
 'use client'
 
 import { Pencil, Trash } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 import { Title } from '../home/styles'
 import SalesForm from './_components/sales-form'
@@ -8,48 +9,92 @@ import {
   ButtonsContainer,
   Container,
   CustomerNameSpan,
+  DeleteSaleButton,
+  EditSaleButton,
   IdSpan,
   MainContainer,
   ProductSpan,
   SaleCard,
   SaleInfo,
   SalePriceSpan,
-  SalesActionButtons,
   SalesList,
 } from './styles'
 
+interface SalesProps {
+  id: number
+  customer_name: string
+  product: string
+  price: number
+}
+
 export default function Dashboard() {
+  const [sales, setSales] = useState<SalesProps[]>([])
+  const [isListUpdated, setIsListUpdated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  async function getSales() {
+    await fetch('http://localhost:3000/api/sales')
+      .then((response) => {
+        return response.json()
+      })
+      .then((data: SalesProps[]) => {
+        setSales(data)
+        setIsLoading(!isLoading)
+      })
+  }
+
+  async function handleDeleteSale(id: number) {
+    await fetch(`http://localhost:3000/api/sales?id=${id}`, {
+      method: 'DELETE',
+    })
+      .then(() => {
+        setIsListUpdated(!isListUpdated)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
+
+  useEffect(() => {
+    getSales()
+  }, [isListUpdated])
+
   return (
     <Container>
       <Title>Dashboard</Title>
 
       <MainContainer>
-        <SalesForm />
+        <SalesForm
+          setIsListUpdated={setIsListUpdated}
+          isListUpdated={isListUpdated}
+        />
 
         <SalesList>
-          <SaleCard>
-            <SaleInfo>
-              <IdSpan>id</IdSpan>
+          {sales.map((sale) => {
+            return (
+              <SaleCard key={sale.id}>
+                <SaleInfo>
+                  <IdSpan>{sale.id}</IdSpan>
 
-              <CustomerNameSpan>
-                André de Oliveira Baasdasrbosa
-              </CustomerNameSpan>
+                  <CustomerNameSpan>{sale.customer_name}</CustomerNameSpan>
 
-              <ProductSpan>Item 1</ProductSpan>
+                  <ProductSpan>{sale.product}</ProductSpan>
 
-              <SalePriceSpan>R$ 90,00</SalePriceSpan>
-            </SaleInfo>
+                  <SalePriceSpan>R$ {sale.price}</SalePriceSpan>
+                </SaleInfo>
 
-            <ButtonsContainer>
-              <SalesActionButtons>
-                <Pencil />
-              </SalesActionButtons>
+                <ButtonsContainer>
+                  <EditSaleButton>
+                    <Pencil />
+                  </EditSaleButton>
 
-              <SalesActionButtons>
-                <Trash />
-              </SalesActionButtons>
-            </ButtonsContainer>
-          </SaleCard>
+                  <DeleteSaleButton onClick={() => handleDeleteSale(sale.id)}>
+                    <Trash />
+                  </DeleteSaleButton>
+                </ButtonsContainer>
+              </SaleCard>
+            )
+          })}
         </SalesList>
       </MainContainer>
     </Container>

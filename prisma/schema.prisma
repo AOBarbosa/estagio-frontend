@@ -14,8 +14,8 @@ model User {
 }
 
 model Sale {
-  id            Int     @id @default(autoincrement())
+  id            Int    @id @default(autoincrement())
   customer_name String
   product       String
-  price         Decimal
+  price         Float
 }

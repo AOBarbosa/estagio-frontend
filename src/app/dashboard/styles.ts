@@ -102,7 +102,7 @@ export const ButtonsContainer = styled.div`
   gap: 1rem;
 `
 
-export const SalesActionButtons = styled.button`
+export const DeleteSaleButton = styled.button`
   height: 2rem;
   width: 3rem;
   display: inline-flex;
@@ -116,8 +116,35 @@ export const SalesActionButtons = styled.button`
   font-weight: 500;
   transition: color 0.3s;
   cursor: pointer;
-  background-color: #cbd5e1;
-  color: #0f172a;
+  background-color: #f23d3d;
+  color: #f1f5f9;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`
+export const EditSaleButton = styled.button`
+  height: 2rem;
+  width: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+  white-space: nowrap;
+  border-radius: 0.375rem;
+  border-style: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.3s;
+  cursor: pointer;
+  background-color: #fcd34d;
+  color: #f1f5f9;
 
   &:hover {
     opacity: 0.9;
