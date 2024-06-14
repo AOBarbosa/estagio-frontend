@@ -4,6 +4,8 @@ import { Dispatch, SetStateAction } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { api } from '@/lib/axios'
+
 import {
   CreateSaleButton,
   FormContainer,
@@ -19,10 +21,9 @@ interface SalesFormComponentProps {
 }
 
 const salesFormSchema = z.object({
-  id: z.number(),
   customer_name: z.string(),
   product: z.string(),
-  price: z.number().min(1),
+  price: z.number(),
 })
 
 type SalesFormSchema = z.infer<typeof salesFormSchema>
@@ -38,22 +39,20 @@ export default function SalesForm({
   )
 
   async function handleCreateSale() {
-    console.log('entrou')
-    await fetch('http://localhost:3000/api/sales', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    try {
+      const response = await api.post('api/sales', {
         customer_name: getValues('customer_name'),
         product: getValues('product'),
         price: getValues('price'),
-      }),
-    }).then(() => {
-      setIsListUpdated(!isListUpdated)
+      })
 
-      reset()
-    })
+      if (response.status === 201) {
+        setIsListUpdated(!isListUpdated)
+        reset()
+      }
+    } catch (error) {
+      alert(error)
+    }
   }
 
   return (
@@ -72,7 +71,10 @@ export default function SalesForm({
 
           <Label>
             Valor
-            <NumberInput type="number" {...register('price')} />
+            <NumberInput
+              type="number"
+              {...register('price', { valueAsNumber: true })}
+            />
           </Label>
 
           <CreateSaleButton type="submit">
